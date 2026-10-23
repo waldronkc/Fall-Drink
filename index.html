@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fall Chai Order</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f6e9d2;
+  --surface: #fff7e8;
+  --ink: #3a1f12;
+  --muted: #7a5a45;
+  --line: #d8bf9c;
+  --pumpkin: #c9560f;
+  --pumpkin-ink: #ffffff;
+  --maple: #8f2d1e;
+  --mustard: #d49a14;
+  --moss: #5d6b2c;
+  --chip: #f0dcb8;
+  --chip-on: #3a1f12;
+  --chip-on-ink: #fff3dc;
+  --receipt: #fffdf6;
+  --shadow: rgba(58, 31, 18, 0.18);
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1f120b;
+    --surface: #2c1b11;
+    --ink: #f6e5c8;
+    --muted: #c3a587;
+    --line: #5a3d29;
+    --pumpkin: #f08a2c;
+    --pumpkin-ink: #2a1306;
+    --maple: #e0644d;
+    --mustard: #e8b73a;
+    --moss: #a3b35a;
+    --chip: #3b2618;
+    --chip-on: #f6e5c8;
+    --chip-on-ink: #2a1306;
+    --receipt: #f6ecd6;
+    --shadow: rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1f120b;
+  --surface: #2c1b11;
+  --ink: #f6e5c8;
+  --muted: #c3a587;
+  --line: #5a3d29;
+  --pumpkin: #f08a2c;
+  --pumpkin-ink: #2a1306;
+  --maple: #e0644d;
+  --mustard: #e8b73a;
+  --moss: #a3b35a;
+  --chip: #3b2618;
+  --chip-on: #f6e5c8;
+  --chip-on-ink: #2a1306;
+  --receipt: #f6ecd6;
+  --shadow: rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+.wrap { max-width: 44rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+/* Header */
+header { padding: 1.5rem 0 2rem; }
+h1 {
+  font-family: "Fraunces", Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-size: clamp(2.4rem, 9vw, 4rem);
+  line-height: 1.02;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.015em;
+  color: var(--maple);
+}
+.lede { margin: 0; color: var(--muted); max-width: 32rem; }
+.leaves { display: flex; gap: 0.35rem; margin-bottom: 1rem; }
+.leaves svg { width: 2rem; height: 2rem; }
+
+/* Sections */
+fieldset { border: 0; padding: 0; margin: 0 0 2rem; min-width: 0; }
+legend {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  padding: 0;
+  margin-bottom: 0.25rem;
+}
+.hint { margin: 0 0 0.75rem; color: var(--muted); font-size: 0.95rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.chip { position: relative; }
+.chip input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.chip span {
+  display: block;
+  padding: 0.65rem 1.1rem;
+  background: var(--chip);
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  font-weight: 500;
+  min-height: 2.75rem;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.chip small { display: block; font-weight: 400; font-size: 0.8rem; opacity: 0.8; line-height: 1.1; }
+.chip input:checked + span {
+  background: var(--chip-on);
+  color: var(--chip-on-ink);
+  border-color: var(--chip-on);
+}
+.chip input:focus-visible + span { outline: 3px solid var(--pumpkin); outline-offset: 2px; }
+
+.extra { margin-top: 0.85rem; }
+.extra[hidden] { display: none; }
+.extra label { display: block; font-size: 0.95rem; color: var(--muted); margin-bottom: 0.3rem; }
+.extra input {
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: 0.6rem;
+  padding: 0.55rem 0.8rem;
+  width: 100%;
+  max-width: 16rem;
+}
+.extra input:focus-visible { outline: 3px solid var(--pumpkin); outline-offset: 2px; }
+
+/* Live cup summary */
+.cup {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: 1.25rem;
+  padding: 1.1rem 1.25rem;
+  margin: 0 0 2rem;
+}
+.cup-title { font-family: "Fraunces", Georgia, serif; font-weight: 700; font-size: 1.25rem; margin: 0 0 0.5rem; }
+.pumps { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0.5rem 0; min-height: 1.2rem; }
+.drop {
+  width: 0.95rem; height: 1.2rem;
+  background: var(--mustard);
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+}
+.drop.over { background: var(--maple); }
+.cup-price { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.95rem; }
+
+button.order {
+  font: inherit;
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: var(--pumpkin);
+  color: var(--pumpkin-ink);
+  border: 0;
+  border-radius: 999px;
+  padding: 0.9rem 2rem;
+  min-height: 3rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 var(--maple);
+  transition: transform 0.08s, box-shadow 0.08s;
+}
+button.order:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--maple); }
+button.order:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+/* Receipt */
+#receiptArea { margin-top: 2.5rem; scroll-margin-top: 1rem; }
+.empty { color: var(--muted); border: 2px dashed var(--line); border-radius: 1rem; padding: 1.25rem; margin: 0; }
+.receipt {
+  background: var(--receipt);
+  color: #3a1f12;
+  max-width: 24rem;
+  padding: 1.5rem 1.5rem 2rem;
+  box-shadow: 0 10px 24px var(--shadow);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.95rem;
+  position: relative;
+  animation: print 0.5s ease-out;
+  --tooth: 10px;
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(var(--tooth) * 2) 100%;
+          mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(var(--tooth) * 2) 100%;
+}
+@keyframes print { from { transform: translateY(-14px); opacity: 0; } to { transform: none; opacity: 1; } }
+.receipt h2 {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.5rem;
+  text-align: center;
+  margin: 0;
+  color: #8f2d1e;
+}
+.receipt .meta { text-align: center; font-size: 0.8rem; color: #7a5a45; margin: 0.2rem 0 0.9rem; }
+.receipt hr { border: 0; border-top: 2px dashed #bfa381; margin: 0.8rem 0; }
+.receipt .summary { margin: 0 0 0.8rem; font-family: "DM Sans", system-ui, sans-serif; font-size: 1rem; line-height: 1.4; }
+.receipt .row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.12rem 0; }
+.receipt .row.total { font-weight: 700; font-size: 1.1rem; border-top: 2px solid #3a1f12; margin-top: 0.4rem; padding-top: 0.45rem; }
+.receipt .thanks { text-align: center; margin: 1rem 0 0; font-size: 0.85rem; color: #7a5a45; }
+
+@media (prefers-reduced-motion: reduce) {
+  .receipt { animation: none; }
+  .chip span, button.order { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="leaves" aria-hidden="true">
+      <svg viewBox="0 0 32 32"><path d="M16 2c7 5 11 11 9 18-1 4-5 8-9 10-4-2-8-6-9-10-2-7 2-13 9-18z" fill="var(--pumpkin)"/><path d="M16 8v22" stroke="var(--bg)" stroke-width="1.5"/></svg>
+      <svg viewBox="0 0 32 32"><path d="M16 2c7 5 11 11 9 18-1 4-5 8-9 10-4-2-8-6-9-10-2-7 2-13 9-18z" fill="var(--maple)"/><path d="M16 8v22" stroke="var(--bg)" stroke-width="1.5"/></svg>
+      <svg viewBox="0 0 32 32"><path d="M16 2c7 5 11 11 9 18-1 4-5 8-9 10-4-2-8-6-9-10-2-7 2-13 9-18z" fill="var(--mustard)"/><path d="M16 8v22" stroke="var(--bg)" stroke-width="1.5"/></svg>
+    </div>
+    <h1>Make your perfect fall drink</h1>
+    <p class="lede">Pick a size, add a fall flavor, set the sweetness, and choose a tip. Your receipt prints at the bottom.</p>
+  </header>
+
+  <fieldset id="sizeSet">
+    <legend>Size</legend>
+    <p class="hint">Bigger cups start with more pumps of sweetener.</p>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="size" value="small"><span>Small<small>$3.50 · 3 pumps</small></span></label>
+      <label class="chip"><input type="radio" name="size" value="medium"><span>Medium<small>$4.25 · 4 pumps</small></span></label>
+      <label class="chip"><input type="radio" name="size" value="large" checked><span>Large<small>$5.00 · 5 pumps</small></span></label>
+    </div>
+  </fieldset>
+
+  <fieldset id="flavorSet">
+    <legend>Fall flavor</legend>
+    <p class="hint">Any flavor adds $1.50. Choose none for a classic chai.</p>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="flavor" value="none" checked><span>None</span></label>
+      <label class="chip"><input type="radio" name="flavor" value="pumpkin spice"><span>Pumpkin spice</span></label>
+      <label class="chip"><input type="radio" name="flavor" value="maple pecan"><span>Maple pecan</span></label>
+      <label class="chip"><input type="radio" name="flavor" value="caramel apple"><span>Caramel apple</span></label>
+      <label class="chip"><input type="radio" name="flavor" value="brown sugar cinnamon"><span>Brown sugar cinnamon</span></label>
+      <label class="chip"><input type="radio" name="flavor" value="__other"><span>Something else</span></label>
+    </div>
+    <div class="extra" id="flavorOtherBox" hidden>
+      <label for="flavorOther">Type your flavor</label>
+      <input id="flavorOther" type="text" maxlength="30" placeholder="e.g. cranberry orange">
+    </div>
+  </fieldset>
+
+  <fieldset id="sweetSet">
+    <legend>Sweetness</legend>
+    <p class="hint">Extra adds one pump for $0.50. Pumps above the standard amount cost $0.50 each.</p>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="sweet" value="less"><span>Less<small>one fewer pump</small></span></label>
+      <label class="chip"><input type="radio" name="sweet" value="normal" checked><span>Normal</span></label>
+      <label class="chip"><input type="radio" name="sweet" value="extra"><span>Extra<small>one more pump</small></span></label>
+      <label class="chip"><input type="radio" name="sweet" value="custom"><span>Custom</span></label>
+      <label class="chip"><input type="radio" name="sweet" value="random"><span>Surprise me</span></label>
+    </div>
+    <div class="extra" id="customPumpBox" hidden>
+      <label for="customPumps">How many pumps?</label>
+      <input id="customPumps" type="number" min="0" max="20" step="1" value="5">
+    </div>
+    <p class="hint" id="randomNote" hidden style="margin-top:0.85rem">We’ll roll 1 to 10 pumps when you place your order.</p>
+  </fieldset>
+
+  <fieldset id="tipSet">
+    <legend>Tip</legend>
+    <p class="hint">Tip is figured on the subtotal, before tax.</p>
+    <div class="chips">
+      <label class="chip"><input type="radio" name="tip" value="0" checked><span>No tip</span></label>
+      <label class="chip"><input type="radio" name="tip" value="10"><span>10%</span></label>
+      <label class="chip"><input type="radio" name="tip" value="15"><span>15%</span></label>
+      <label class="chip"><input type="radio" name="tip" value="20"><span>20%</span></label>
+      <label class="chip"><input type="radio" name="tip" value="custom"><span>Custom</span></label>
+    </div>
+    <div class="extra" id="customTipBox" hidden>
+      <label for="customTip">Tip percent</label>
+      <input id="customTip" type="number" min="0" max="100" step="1" value="18">
+    </div>
+  </fieldset>
+
+  <section class="cup" aria-live="polite">
+    <h2 class="cup-title" id="cupTitle"></h2>
+    <div class="pumps" id="pumpDots" aria-hidden="true"></div>
+    <p class="cup-price" id="cupPrice"></p>
+  </section>
+
+  <button type="button" class="order" id="orderBtn">Place order</button>
+
+  <section id="receiptArea" aria-live="polite">
+    <p class="empty" id="emptyMsg">Your receipt will show up here after you place your order.</p>
+  </section>
+</div>
+
+<script>
+(function () {
+  var SIZES = {
+    small:  { price: 3.50, pumps: 3 },
+    medium: { price: 4.25, pumps: 4 },
+    large:  { price: 5.00, pumps: 5 }
+  };
+  var TAX_RATE = 0.05;
+  var FLAVOR_FEE = 1.50;
+  var PUMP_FEE = 0.50;
+
+  function $(id) { return document.getElementById(id); }
+  function val(name) {
+    var el = document.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : null;
+  }
+  function money(n) { return '$' + n.toFixed(2); }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  // Mirrors the Java logic. rolledPumps is used only for the "random" choice.
+  function buildOrder(rolledPumps) {
+    var size = val('size');
+    var info = SIZES[size];
+    var basePrice = info.price;
+    var basePumps = info.pumps;
+
+    // Flavor: any real flavor adds $1.50 and gets " chai" appended
+    var flavorChoice = val('flavor');
+    var flavor = flavorChoice;
+    if (flavorChoice === '__other') {
+      flavor = $('flavorOther').value.trim();
+    }
+    var hasFlavor = !(flavor === '' || flavor === 'none' || flavor.toLowerCase() === 'n/a');
+    var flavorName;
+    if (hasFlavor) {
+      flavorName = flavor + ' chai';
+      basePrice += FLAVOR_FEE;
+    } else {
+      flavorName = 'chai';
+    }
+
+    // Sweetness
+    var sweet = val('sweet');
+    var pumps = basePumps;
+    var price = basePrice;
+
+    if (sweet === 'extra') {
+      pumps = basePumps + 1;
+      price += PUMP_FEE;
+    } else if (sweet === 'less') {
+      pumps = Math.max(0, basePumps - 1);
+    } else if (sweet === 'normal') {
+      pumps = basePumps;
+    } else if (sweet === 'random') {
+      pumps = (rolledPumps != null) ? rolledPumps : basePumps;
+      if (pumps > basePumps) price = basePrice + (pumps - basePumps) * PUMP_FEE;
+    } else if (sweet === 'custom') {
+      var n = parseInt($('customPumps').value, 10);
+      if (isNaN(n) || n < 0) n = 0;
+      if (n > 20) n = 20;
+      pumps = n;
+      if (pumps > basePumps) price = basePrice + (pumps - basePumps) * PUMP_FEE;
+    }
+
+    return {
+      size: size,
+      flavorName: flavorName,
+      hasFlavor: hasFlavor,
+      basePrice: info.price,
+      basePumps: basePumps,
+      pumps: pumps,
+      extraPumps: Math.max(0, pumps - basePumps),
+      subtotal: price,
+      sweet: sweet
+    };
+  }
+
+  function tipRate() {
+    var t = val('tip');
+    if (t === 'custom') {
+      var c = parseFloat($('customTip').value);
+      if (isNaN(c) || c < 0) c = 0;
+      return c / 100;
+    }
+    return parseFloat(t) / 100;
+  }
+
+  // Live preview
+  function renderPreview() {
+    var o = buildOrder(null);
+    $('cupTitle').textContent = cap(o.size) + ' ' + o.flavorName;
+
+    var dots = $('pumpDots');
+    dots.textContent = '';
+    for (var i = 0; i < o.pumps; i++) {
+      var d = document.createElement('span');
+      d.className = 'drop' + (i >= o.basePumps ? ' over' : '');
+      dots.appendChild(d);
+    }
+    var pumpText = (o.sweet === 'random')
+      ? 'Pumps: a surprise from 1 to 10'
+      : 'Pumps: ' + o.pumps;
+    var priceText = (o.sweet === 'random')
+      ? 'Starts at ' + money(o.subtotal) + ' before tax and tip'
+      : 'Subtotal: ' + money(o.subtotal) + ' before tax and tip';
+    if (o.sweet === 'random') dots.textContent = '';
+    $('cupPrice').textContent = pumpText + ' · ' + priceText;
+  }
+
+  function toggleExtras() {
+    $('flavorOtherBox').hidden = val('flavor') !== '__other';
+    $('customPumpBox').hidden = val('sweet') !== 'custom';
+    $('randomNote').hidden = val('sweet') !== 'random';
+    $('customTipBox').hidden = val('tip') !== 'custom';
+  }
+
+  function row(label, amount, cls) {
+    var r = document.createElement('div');
+    r.className = 'row' + (cls ? ' ' + cls : '');
+    var a = document.createElement('span');
+    a.textContent = label;
+    var b = document.createElement('span');
+    b.textContent = amount;
+    r.appendChild(a);
+    r.appendChild(b);
+    return r;
+  }
+
+  function placeOrder() {
+    var rolled = null;
+    if (val('sweet') === 'random') rolled = Math.floor(Math.random() * 10) + 1;
+    var o = buildOrder(rolled);
+
+    var tipPct = tipRate();
+    var tip = o.subtotal * tipPct;
+    var tax = o.subtotal * TAX_RATE;
+    var total = o.subtotal + tax + tip;
+
+    var area = $('receiptArea');
+    area.textContent = '';
+
+    var rc = document.createElement('article');
+    rc.className = 'receipt';
+
+    var h = document.createElement('h2');
+    h.textContent = 'Fall Chai Co.';
+    rc.appendChild(h);
+
+    var meta = document.createElement('p');
+    meta.className = 'meta';
+    var num = Math.floor(1000 + Math.random() * 9000);
+    meta.textContent = 'Order #' + num + ' · ' + new Date().toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
+    rc.appendChild(meta);
+
+    var sum = document.createElement('p');
+    sum.className = 'summary';
+    var line = 'You ordered a ' + o.size + ' ' + o.flavorName + ' with ' + o.pumps + ' pump' + (o.pumps === 1 ? '' : 's') + '.';
+    if (o.sweet === 'random') line += ' (Randomly assigned pumps: ' + o.pumps + ')';
+    sum.textContent = line;
+    rc.appendChild(sum);
+
+    rc.appendChild(document.createElement('hr'));
+
+    rc.appendChild(row(cap(o.size) + ' chai', money(o.basePrice)));
+    if (o.hasFlavor) rc.appendChild(row('Fall flavor', money(FLAVOR_FEE)));
+    if (o.extraPumps > 0) {
+      rc.appendChild(row(o.extraPumps + ' extra pump' + (o.extraPumps === 1 ? '' : 's'), money(o.extraPumps * PUMP_FEE)));
+    }
+
+    rc.appendChild(document.createElement('hr'));
+
+    rc.appendChild(row('Subtotal', money(o.subtotal)));
+    rc.appendChild(row('Tax (5%)', money(tax)));
+    rc.appendChild(row('Tip (' + Math.round(tipPct * 1000) / 10 + '%)', money(tip)));
+    rc.appendChild(row('Grand total', money(total), 'total'));
+
+    var thanks = document.createElement('p');
+    thanks.className = 'thanks';
+    thanks.textContent = 'Thanks for stopping by. Happy fall!';
+    rc.appendChild(thanks);
+
+    area.appendChild(rc);
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    rc.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' });
+  }
+
+  document.addEventListener('change', function () { toggleExtras(); renderPreview(); });
+  document.addEventListener('input', renderPreview);
+  $('orderBtn').addEventListener('click', placeOrder);
+
+  toggleExtras();
+  renderPreview();
+})();
+</script>
+</body>
+</html>
